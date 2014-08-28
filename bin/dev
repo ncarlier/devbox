@@ -1,0 +1,12 @@
+#!/bin/bash
+
+###
+# Simple script to get a development shell into the container.
+###
+docker run \
+    --name="devbox" \
+    -v ~/:/var/shared \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -it \
+    ncarlier/devbox
+
