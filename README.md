@@ -11,3 +11,5 @@ Contains:
 * zsh
 * curl
 * wget
+* docker
+* fleetctl
