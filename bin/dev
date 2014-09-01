@@ -3,10 +3,31 @@
 ###
 # Simple script to get a development shell into the container.
 ###
-docker run \
-    --name="devbox" \
-    -v ~/:/var/shared \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -it \
-    ncarlier/devbox
+
+start_new_container()
+{
+    docker run \
+        --name="devbox" \
+        -v ~/:/var/shared \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -it \
+        ncarlier/devbox $@
+}
+
+docker ps | grep devbox
+
+if [ $? -ne 0 ]; then
+    echo "Devbox not running..."
+    docker ps -a | grep devbox
+    if [ $? -ne 0 ]; then
+        echo "Devbox not found, starting a new one..."
+        start_new_container
+    else
+        echo "Devbox found, re-starting..."
+        docker start -a devbox
+    fi
+else
+    echo "Devbox already running, re-attach..."
+    docker attach devbox
+fi
 
