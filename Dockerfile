@@ -14,7 +14,7 @@ env DEBIAN_FRONTEND noninteractive
 run apt-get update && apt-get upgrade -y
 
 # Install packages
-run apt-get install -y man vim tmux zsh git curl wget sudo
+run apt-get install -y man vim tmux zsh git curl wget sudo ca-certificates build-essential
 
 # Install the latest version of the docker CLI
 run curl -L -o /usr/local/bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
@@ -25,6 +25,13 @@ run groupadd -g 1002 docker
 # Install the latest version of fleetctl
 env FLEET_URL https://github.com/coreos/fleet/releases/download/v0.7.1/fleet-v0.7.1-linux-amd64.tar.gz
 run (cd /tmp && wget $FLEET_URL -O fleet.tgz && tar zxf fleet.tgz && mv fleet-*/fleetctl /usr/local/bin/)
+
+# Install the latest version of Go
+env GO_URL https://storage.googleapis.com/golang/go1.3.1.linux-amd64.tar.gz
+run (cd /tmp && curl -L -o go.tgz $GO_URL && tar -v -C /usr/local -xzf go.tgz)
+env GOROOT /usr/local/go/
+env GOPATH /home/dev/go
+env PATH $PATH:$GOROOT/bin:$GOPATH/bin
 
 # Setup home environment
 run useradd dev -G docker -s /bin/zsh
@@ -39,6 +46,9 @@ volume /var/shared
 
 # Setup working directory
 workdir /home/dev
+
+# Cleanup
+run rm -rf /tmp/* && apt-get clean
 
 # Run everything below as the dev user
 user dev

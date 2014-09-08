@@ -13,3 +13,4 @@ Contains:
 * wget
 * docker
 * fleetctl
+* go
