@@ -57,9 +57,9 @@ user dev
 run git clone git://github.com/ncarlier/dotfiles.git ~/
 
 # Link in shared parts of the home directory
-run ln -s /var/shared/.ssh && \
-    ln -s /var/shared/.gitconfig && \
-    ln -s /var/shared/src
+run ln -fs /var/shared/.ssh && \
+    ln -fs /var/shared/.gitconfig && \
+    ln -fs /var/shared/src
 
 # Install oh my zsh
 run git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
