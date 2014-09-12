@@ -53,13 +53,12 @@ run rm -rf /tmp/* && apt-get clean
 # Run everything below as the dev user
 user dev
 
+# Install dotfiles
+run git clone git://github.com/ncarlier/dotfiles.git ~/
+
 # Link in shared parts of the home directory
 run ln -s /var/shared/.ssh && \
-    ln -s /var/shared/.vim && \
-    ln -s /var/shared/.vimrc && \
     ln -s /var/shared/.gitconfig && \
-    ln -s /var/shared/.tmux.conf && \
-    ln -s /var/shared/.zshrc && \
     ln -s /var/shared/src
 
 # Install oh my zsh

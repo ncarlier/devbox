@@ -8,7 +8,7 @@ start_new_container()
 {
     docker run \
         --name="devbox" \
-        -v ~/:/var/shared \
+        -v $SHARED_DIR:/var/shared \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -it \
         ncarlier/devbox $@
