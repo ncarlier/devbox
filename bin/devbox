@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ###
 # Simple script to get a development shell into the container.
@@ -10,6 +10,7 @@ start_new_container()
         --name="devbox" \
         -v $SHARED_DIR:/var/shared \
         -v /var/run/docker.sock:/var/run/docker.sock \
+        --env-file="/etc/environment" \
         -it \
         ncarlier/devbox $@
 }

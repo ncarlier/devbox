@@ -20,7 +20,8 @@ run apt-get install -y man vim tmux zsh git curl wget sudo ca-certificates build
 run curl -L -o /usr/local/bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
     chmod +x /usr/local/bin/docker
 
-run groupadd -g 1002 docker
+# Allow dev user to use docker
+run echo "dev    ALL=NOPASSWD: /usr/local/bin/docker" > /etc/sudoers.d/docker
 
 # Install the latest version of fleetctl
 env FLEET_URL https://github.com/coreos/fleet/releases/download/v0.7.1/fleet-v0.7.1-linux-amd64.tar.gz
@@ -33,8 +34,8 @@ env GOROOT /usr/local/go/
 env GOPATH /home/dev/go
 env PATH $PATH:$GOROOT/bin:$GOPATH/bin
 
-# Setup home environment
-run useradd dev -G docker -s /bin/zsh
+# Setup dev user environment
+run useradd dev -s /bin/zsh
 run mkdir /home/dev && chown -R dev: /home/dev
 env HOME /home/dev
 env PATH $HOME/bin:$PATH
