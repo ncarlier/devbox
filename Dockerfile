@@ -14,7 +14,7 @@ env DEBIAN_FRONTEND noninteractive
 run apt-get update && apt-get upgrade -y
 
 # Install packages
-run apt-get install -y man vim tmux zsh git curl wget sudo ca-certificates build-essential
+run apt-get install -y man vim tmux zsh git curl wget sudo ca-certificates build-essential corkscrew dnsutils
 
 # Install the latest version of the docker CLI
 run curl -L -o /usr/local/bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
