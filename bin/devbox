@@ -4,7 +4,7 @@
 # Simple script to get a development shell into the container.
 ###
 
-if [ -z "$SHARED_DIR" ] || [ "${SHARED_DIR+xxx}" = "xxx" ]; then
+if [ -z "$SHARED_DIR" ] || [ "${SHARED_DIR}xxx" = "xxx" ]; then
     # Share home directory if SHARED_DIR is not set.
     export SHARED_DIR=$HOME
 fi
