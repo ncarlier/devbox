@@ -16,6 +16,7 @@ start_new_container()
         --name="devbox" \
         -v $SHARED_DIR:/var/shared \
         -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /etc/environment:/etc/environment \
         --env-file="/etc/environment" \
         -it \
         ncarlier/devbox
