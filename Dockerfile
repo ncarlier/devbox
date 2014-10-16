@@ -24,7 +24,7 @@ run curl -L -o /usr/local/bin/docker https://get.docker.io/builds/Linux/x86_64/d
 run echo "dev    ALL=NOPASSWD: /usr/local/bin/docker" > /etc/sudoers.d/docker
 
 # Install the latest version of fleetctl
-env FLEET_URL https://github.com/coreos/fleet/releases/download/v0.7.1/fleet-v0.7.1-linux-amd64.tar.gz
+env FLEET_URL https://github.com/coreos/fleet/releases/download/v0.8.3/fleet-v0.8.3-linux-amd64.tar.gz
 run (cd /tmp && wget $FLEET_URL -O fleet.tgz && tar zxf fleet.tgz && mv fleet-*/fleetctl /usr/local/bin/)
 
 # Install the latest version of Go
