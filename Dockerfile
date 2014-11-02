@@ -12,7 +12,7 @@ env DEBIAN_FRONTEND noninteractive
 run apt-get update && apt-get upgrade -y && apt-get clean
 
 # Install packages
-run apt-get install -y man vim tmux zsh git curl wget sudo ca-certificates build-essential corkscrew dnsutils && \
+run apt-get install -y man vim tmux zsh git curl wget sudo ca-certificates build-essential corkscrew dnsutils locales locales-all && \
     apt-get clean
 
 # Install the latest version of the docker CLI
@@ -40,7 +40,7 @@ env HOME /home/dev
 env PATH $HOME/bin:$PATH
 
 # Set the locale
-run locale-gen fr_FR.UTF-8
+run locale-gen fr_FR.UTF-8 && dpkg-reconfigure locales
 env LANG fr_FR.UTF-8
 env LANGUAGE fr_FR:fr
 env LC_ALL fr_FR.UTF-8
