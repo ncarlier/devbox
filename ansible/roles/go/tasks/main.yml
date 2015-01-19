@@ -1,0 +1,10 @@
+
+- name: Get Go archive
+  get_url: url={{ go_url }} dest=/tmp/go.tgz mode=0440
+
+- name: Extract Go archive
+  command: tar -C /usr/local -zxf /tmp/go.tgz
+
+- name: Set Go environment variables
+  template: src=go.sh dest=/etc/profile.d/go.sh
+

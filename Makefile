@@ -1,5 +1,5 @@
 .SILENT :
-.PHONY : build clean run
+.PHONY : build clean cleanup run
 
 USERNAME:=ncarlier
 APPNAME:=devbox
@@ -13,7 +13,11 @@ build:
 
 clean:
 	echo "Removing $(IMAGE) docker image..."
-	sudo docker rmi $(IMAGE)
+	-sudo docker rmi $(IMAGE)
+
+cleanup:
+	echo "Removing dangling docker images..."
+	-sudo docker images -q --filter 'dangling=true' | xargs sudo docker rmi
 
 run:
 	sudo bin/devbox

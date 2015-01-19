@@ -1,0 +1,10 @@
+- name: Bootstrap my Devbox
+  gather_facts: false
+  hosts: localhost
+  roles:
+    - common
+    - docker
+    - fleet
+    - go
+    - user
+
