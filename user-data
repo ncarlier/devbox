@@ -1,5 +1,11 @@
 #cloud-config
 
+write_files:
+  - path: /etc/systemd/system/docker.service.d/50-insecure-registry.conf
+    content: |
+        [Service]
+        Environment=DOCKER_OPTS='--insecure-registry="registry.wl.nunux.org"'
+
 coreos:
   etcd:
     # generate a new token for each unique cluster from https://discovery.etcd.io/new
