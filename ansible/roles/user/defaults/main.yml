@@ -1,4 +1,3 @@
 ---
 dotfiles_git: "git://github.com/ncarlier/dotfiles.git"
-ohmyzsh_git: "git://github.com/robbyrussell/oh-my-zsh.git"
 

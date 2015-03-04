@@ -17,16 +17,10 @@
 - name: Get dot files
   command: git clone {{ dotfiles_git }} /home/dev/.dotfiles
 
-- name: Install dot files
-  shell: for f in /home/dev/.dotfiles/.*; do ln -s $f /home/dev/; done
-
 - name: Link files from the shared directory
   file: src=/var/shared/.ssh dest=/home/dev/.ssh state=link force=yes
   file: src=/var/shared/.gitconfig dest=/home/dev/.gitconfig state=link force=yes
   file: src=/var/shared/src dest=/home/dev/src state=link force=yes
-
-- name: Install oh my zsh
-  command: git clone {{ ohmyzsh_git }} /home/dev/.oh-my-zsh
 
 - name: Fix owner
   command: chown dev.dev -R /home/dev
