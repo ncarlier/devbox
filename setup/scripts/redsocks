@@ -8,8 +8,9 @@ rs_start() {
         --name="redsocks" \
         --privileged=true \
         --net=host \
+        -v /opt/etc/whitelist.txt:/etc/redsocks-whitelist.txt \
         -d \
-        ncarlier/docker-redsocks
+        ncarlier/redsocks
 }
 
 ################

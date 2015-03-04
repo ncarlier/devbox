@@ -70,6 +70,8 @@ Vagrant.configure("2") do |config|
       ip = "172.17.8.#{i+100}"
       config.vm.network :private_network, ip: ip
 
+      config.vm.synced_folder ".", "/vagrant", type: "rsync"
+
       # Share home directory with the VM
       config.vm.synced_folder "~/", "/vagrant_data",
         owner: "dev", group:"dev",
