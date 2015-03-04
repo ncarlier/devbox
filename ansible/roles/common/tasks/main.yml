@@ -16,6 +16,7 @@
     - ca-certificates
     - build-essential
     - nodejs
+    - python
     - npm
     - dnsutils
     - locales
