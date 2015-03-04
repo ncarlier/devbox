@@ -18,7 +18,7 @@ copy ansible /workspace
 workdir /workspace
 
 # Run Ansible to configure the Docker image
-run ansible-playbook devbox.yml -i hosts
+run ansible-playbook playbook.yml -i hosts
 
 # Setup shared volume
 volume /var/shared
