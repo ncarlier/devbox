@@ -5,19 +5,16 @@ require 'fileutils'
 
 Vagrant.require_version ">= 1.6.0"
 
-CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
-PROVISION_SCRIPT = File.join(File.dirname(__FILE__), "bin", "provision.sh")
-DEVBOX_SCRIPT = File.join(File.dirname(__FILE__), "bin", "devbox")
-REDSOCKS_SCRIPT = File.join(File.dirname(__FILE__), "bin", "redsocks")
+PROVISION_SCRIPT = File.join(File.dirname(__FILE__), "setup", "provision.sh")
 
 # Defaults for config options defined in CONFIG
 $num_instances = 1
 $update_channel = "alpha"
-$enable_serial_logging = false
 $vb_gui = false
 $vb_memory = 1024
 $vb_cpus = 1
+$expose_docker_tcp = false
 
 # Attempt to apply the deprecated environment variable NUM_INSTANCES to
 # $num_instances while allowing config.rb to override it
@@ -31,11 +28,13 @@ end
 
 Vagrant.configure("2") do |config|
   config.vm.box = "coreos-%s" % $update_channel
-  config.vm.box_version = ">= 308.0.1"
+  config.vm.box_version = ">= 584.0.0"
   config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % $update_channel
 
-  config.vm.provider :vmware_fusion do |vb, override|
-    override.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant_vmware_fusion.json" % $update_channel
+  config.vm.provider :libvirt do |vb, override|
+    override.vm.box = "coreos_production_vagrant"
+    override.vm.box_version =">= 0"
+    override.vm.box_url = ""
   end
 
   config.vm.provider :virtualbox do |v|
@@ -54,38 +53,18 @@ Vagrant.configure("2") do |config|
     config.vm.define vm_name = "devbox-%02d" % i do |config|
       config.vm.hostname = vm_name
 
-      if $enable_serial_logging
-        logdir = File.join(File.dirname(__FILE__), "log")
-        FileUtils.mkdir_p(logdir)
-
-        serialFile = File.join(logdir, "%s-serial.txt" % vm_name)
-        FileUtils.touch(serialFile)
-
-        config.vm.provider :vmware_fusion do |v, override|
-          v.vmx["serial0.present"] = "TRUE"
-          v.vmx["serial0.fileType"] = "file"
-          v.vmx["serial0.fileName"] = serialFile
-          v.vmx["serial0.tryNoRxLoss"] = "FALSE"
-        end
-
-        config.vm.provider :virtualbox do |vb, override|
-          vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
-          vb.customize ["modifyvm", :id, "--uartmode1", serialFile]
-        end
-      end
-
       if $expose_docker_tcp
         config.vm.network "forwarded_port", guest: 2375, host: ($expose_docker_tcp + i - 1), auto_correct: true
-      end
-
-      config.vm.provider :vmware_fusion do |vb|
-        vb.gui = $vb_gui
       end
 
       config.vm.provider :virtualbox do |vb|
         vb.gui = $vb_gui
         vb.memory = $vb_memory
         vb.cpus = $vb_cpus
+      end
+      config.vm.provider :libvirt do |domain|
+        domain.memory = $memory
+        domain.cpus = $cpus
       end
 
       ip = "172.17.8.#{i+100}"
@@ -96,16 +75,8 @@ Vagrant.configure("2") do |config|
         owner: "dev", group:"dev",
         type: "rsync", rsync__exclude: "VirtualBox\ VMs/"
 
-      # Setup userdata
-      config.vm.provision :file,  :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
-      config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
-
-      # Install devbox script
-      config.vm.provision :file,  :source => "#{DEVBOX_SCRIPT}", :destination => "/tmp/devbox"
-      # Install redsocks script
-      config.vm.provision :file,  :source => "#{REDSOCKS_SCRIPT}", :destination => "/tmp/redsocks"
       # Run provisioning
-      config.vm.provision :shell, path: "#{PROVISION_SCRIPT}"
+      config.vm.provision :shell, path: "#{PROVISION_SCRIPT}", :privileged => true
     end
   end
 end
