@@ -14,6 +14,7 @@ start_new_container()
     echo "Using shared directory $SHARED_DIR"
     docker run \
         --name="devbox" \
+        -h "devbox" \
         -v $SHARED_DIR:/var/shared \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -it \

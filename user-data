@@ -1,4 +1,5 @@
 #cloud-config
+# vi: set ft=yaml :
 
 write_files:
   - path: /etc/systemd/system/docker.service.d/50-insecure-registry.conf
