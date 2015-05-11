@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
         domain.cpus = $cpus
       end
 
-      ip = "172.17.8.#{i+100}"
+      ip = "192.168.91.#{i+100}"
       config.vm.network :private_network, ip: ip
 
       config.vm.synced_folder ".", "/vagrant", type: "rsync"
