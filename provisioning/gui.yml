@@ -2,9 +2,12 @@
   gather_facts: true
   hosts: all
   sudo: true
-  tasks:
-    - include: headless.yml
   roles:
+    - common
+    - user
+    - ssh
+    - docker
+    - redsocks
     - common-gui
     - intellij
     - vboxadditions

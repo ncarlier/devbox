@@ -4,7 +4,7 @@
 $memory = 2048
 $cpus = 2
 $ip = "192.168.91.99"
-$disk = './datadisk.vdi'
+$disk = '.datadisk.vdi'
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -56,7 +56,7 @@ Vagrant.configure(2) do |config|
     unless File.exist?($disk)
       vb.customize ['createhd', '--filename', $disk, '--size', 10 * 1024]
     end
-    vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', $disk]
+    vb.customize ['storageattach', :id, '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', $disk]
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies

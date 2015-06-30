@@ -1,5 +1,5 @@
 - name: create users
-  user: name={{ item.login }} shell=/bin/zsh group=developers
+  user: name={{ item.login }} shell=/bin/zsh groups=developers
   with_items: users
 
 - name: download pubkey from github and placed as authorized_keys
