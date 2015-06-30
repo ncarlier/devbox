@@ -1,0 +1,23 @@
+- name: disallow ssh password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?PasswordAuthentication'
+    line='PasswordAuthentication no'
+    state=present
+  notify: restart ssh
+
+- name: only allow ssh protocol 2
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?Protocol '
+    line='Protocol 2'
+    state=present
+  notify: restart ssh
+
+- name: allow x11 forwarding
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?X11Forwarding '
+    line='X11Forwarding yes'
+    state=present
+  notify: restart ssh
+
+# run handlers immediately to put ssh changes into effect
+- meta: flush_handlers

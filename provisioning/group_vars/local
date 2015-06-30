@@ -1,0 +1,19 @@
+# vi: set ft=yaml :
+---
+
+hostname: devbox
+
+motd_header: |
+ ._____             _               
+ |  __ \           | |              
+ | |  | | _____   _| |__   _____  __
+ | |  | |/ _ \ \ / / `_ \ / _ \ \/ /
+ | |__| |  __/\ V /| |_) | (_) >  < 
+ |_____/ \___| \_/ |_.__/ \___/_/\_\
+
+users:
+  - login: nicolas
+    github: ncarlier
+    email: hostmaster@nunux.org
+    dotfiles: "https://github.com/ncarlier/dotfiles.git"
+

@@ -1,0 +1,58 @@
+- name: create users
+  user: name={{ item.login }} shell=/bin/zsh group=developers
+  with_items: users
+
+- name: download pubkey from github and placed as authorized_keys
+  get_url: url=https://github.com/{{ item.github }}.keys dest=/tmp/{{ item.login }}.authorized_keys
+  when: item.github is defined
+  with_items: users
+
+- name: register authorized_keys
+  shell: "cat /tmp/{{ item.login }}.authorized_keys"
+  register: auth_keys
+  when: item.github is defined
+  with_items: users
+
+- name: create authorized_keys from the file that just downloaded
+  authorized_key: user={{ item.item.login }} key="{{ item.stdout }}"
+  when: auth_keys.changed
+  with_items: auth_keys.results
+
+- name: configure sudo
+  template: >
+    dest="/etc/sudoers.d/admins"
+    src="sudo.j2"
+
+- name: install dotfiles
+  git: >
+    repo="{{ item.dotfiles }}"
+    dest="/home/{{item.login}}/.dotfiles"
+    accept_hostkey=yes
+  when: item.dotfiles is defined
+  with_items: users
+
+- name: fix dotfiles owner
+  command: chown {{item.login}}.developers -R /home/{{item.login}}/.dotfiles
+  when: item.dotfiles is defined
+  with_items: users
+
+- name: configure bash aliases (if no dotfiles)
+  copy: >
+    src=bash_aliases
+    dest="/home/{{ item.login }}/.bash_aliases"
+    owner="{{ item.login }}"
+    group="{{ item.login }}"
+  when: item.dotfiles is not defined
+  with_items: users
+
+- name: set forwarding email address
+  lineinfile: >
+    dest="/home/{{ item.login }}/.forward"
+    regexp='^.+'
+    line="{{ item.email }}"
+    create=yes
+    owner="{{ item.login }}"
+    group="{{ item.login }}"
+  when: item.email is defined
+  with_items: users
+

@@ -1,0 +1,7 @@
+---
+
+- name: install redsocks script
+  copy: src=redsocks dest=/usr/local/bin/redsocks mode=0755
+
+- name: install redsocks whitelist
+  copy: src=whitelist.txt dest=/etc/redsocks-whitelist.txt

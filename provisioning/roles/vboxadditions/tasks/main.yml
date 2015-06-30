@@ -1,0 +1,7 @@
+- name: install dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - virtualbox-guest-dkms
+    - virtualbox-guest-utils
+    - virtualbox-guest-x11
+

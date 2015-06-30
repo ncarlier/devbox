@@ -1,0 +1,29 @@
+- name: install dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - xfce4
+    - xfce4-terminal
+    - lightdm
+    - chromium
+    - openjdk-8-jdk
+
+- command: dpkg-reconfigure lightdm
+
+- name: permit anyone to start the x server
+  lineinfile: dest=/etc/X11/Xwrapper.config
+    regexp='^#?allowed_users='
+    line='allowed_users=anybody'
+    state=present
+
+- name: lightdm auto login
+  lineinfile: dest=/etc/lightdm/lightdm.conf
+    regexp='^#?autologin-user='
+    line='autologin-user=nicolas'
+    state=present
+
+- name: lightdm auto login
+  lineinfile: dest=/etc/lightdm/lightdm.conf
+    regexp='^#?autologin-user-timeout='
+    line='autologin-user-timeout=0'
+    state=present
+

@@ -14,11 +14,11 @@ run apt-get update && \
     apt-get clean
 
 # Add playbooks to the Docker image
-copy ansible /workspace
-workdir /workspace
+copy provisioning /provisioning
+workdir /provisioning
 
 # Run Ansible to configure the Docker image
-run ansible-playbook playbook.yml -i hosts
+run ansible-playbook headless.yml -i inventory/docker
 
 # Setup shared volume
 volume /var/shared

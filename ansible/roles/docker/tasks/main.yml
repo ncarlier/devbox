@@ -1,8 +1,0 @@
-- name: Install Docker binary
-  get_url: url={{ docker_url }} dest=/usr/local/bin/docker mode=0755
-
-- name: Allow dev user to use Docker
-  lineinfile: 
-    'dest=/etc/sudoers.d/docker create=yes state=present regexp="docker$"
-    line="dev ALL=NOPASSWD: /usr/local/bin/docker"'
-

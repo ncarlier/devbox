@@ -1,0 +1,11 @@
+- name: Headless devbox bootstrap
+  gather_facts: true
+  hosts: all
+  sudo: true
+  roles:
+    - common
+    - user
+    - ssh
+    - docker
+    - redsocks
+

@@ -1,6 +1,0 @@
-- name: Get Fleet archive
-  get_url: url={{ fleet_url }} dest=/tmp/fleet.tgz mode=0440
-
-- name: Extract Fleet archive
-  command: tar -C /usr/local/bin -xzf /tmp/fleet.tgz --strip-components 1 --no-anchored 'fleetctl'
-

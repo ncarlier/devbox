@@ -1,0 +1,23 @@
+---
+
+- name: check if docker is installed
+  stat: path=/usr/bin/docker
+  register: docker_bin
+
+- name: configure docker daemon
+  copy: src=docker.service dest=/etc/systemd/system/docker.service owner=root group=root
+
+- name: install docker
+  shell: "curl -sSL https://get.docker.com/ | sh"
+  when: not docker_bin.stat.exists
+
+- name: install docker compose
+  shell: "pip install -U docker-compose"
+  when: not docker_bin.stat.exists
+
+- name: create docker group
+  group: name=docker state=present
+
+- name: add users to docker group
+  user: name={{item.login}} groups=docker append=yes
+  with_items: users

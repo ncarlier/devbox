@@ -1,0 +1,73 @@
+- name: add contribi and non-free repositories
+  apt_repository: repo='deb http://httpredir.debian.org/debian jessie main contrib non-free' state=present update_cache=yes
+
+- name: add backports repository
+  apt_repository: repo='deb http://httpredir.debian.org/debian jessie-backports main' state=present update_cache=yes
+
+- command: dpkg --configure -a
+
+- name: upgrade system
+  apt: upgrade=dist update_cache=yes
+
+- name: install dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - man
+    - git
+    - ntp
+    - vim
+    - zsh
+    - ssh
+    - htop
+    - tmux
+    - sudo
+    - curl
+    - openssl
+    - unattended-upgrades
+    - apt-listchanges
+    - corkscrew
+    - ca-certificates
+    - build-essential
+    - nodejs
+    - npm
+    - golang
+    - python-pip
+    - dnsutils
+    - locales
+    - locales-all
+
+- name: Ensure fr_FR locale exists
+  locale_gen: name=fr_FR.UTF-8 state=present
+
+- name: set hostname
+  hostname: name={{hostname}}
+  when: hostname is defined
+
+- name: update hosts file
+  lineinfile: >
+    dest=/etc/hosts
+    regexp='^127\.0\.1\.1'
+    line='127.0.1.1 {{ hostname }}'
+    owner=root group=root mode=0644
+  when: hostname is defined
+
+- name: install motd
+  template: >
+    dest=/etc/motd
+    src=motd.j2
+
+- name: activate unattended-upgrades
+  copy: src=10periodic dest=/etc/apt/apt.conf.d/10periodic owner=root group=root
+
+- name: configure root bash
+  copy: src=bashrc dest=/root/.bashrc
+
+- name: create developers group
+  group: name=developers state=present
+
+- name: create shared directory
+  file: path=/var/shared group=developers mode=0775 state=directory
+
+- name: create directory placeholder (need by docker volume)
+  file: path=/var/shared/.placeholder state=touch
+

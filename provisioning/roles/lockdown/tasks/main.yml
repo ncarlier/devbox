@@ -1,0 +1,20 @@
+# The first run on a new host when we're logging in as root using an SSH key
+# will flush handlers at the end of this play and cause sshd to restart
+# if we changed ssh access below, after which the rest of the tasks and
+# plays will fail because it's no longer possible to ssh in as root.
+#
+# To continue, just change the ansible ssh user to the user that is allowed
+# to ssh in and that has sudo privileges and run the playbook again.
+
+- name: disallow root ssh access
+  lineinfile: >
+    dest=/etc/ssh/sshd_config
+    regexp="^#?PermitRootLogin"
+    line="PermitRootLogin no"
+    state=present
+  notify: restart ssh
+
+- name: disable root account
+  command: passwd -l root
+
+- meta: flush_handlers
