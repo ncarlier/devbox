@@ -21,7 +21,6 @@ GUI setup:
 - Headless setup, plus...
 - XFCE 4
 - Chromium
-- Intellij IDEA 14 Community
 - Virtual Box Additions
 
 > Note: GUI setup is not available with the Docker image
@@ -35,6 +34,7 @@ GUI setup:
 3. Install vagrant proxy conf plugin (if you are behind a corporate proxy)
   ```
   vagrant plugin install vagrant-proxyconf
+  vagrant plugin install vagrant-persistent-storage
   ```
   Edit your global Vagrantfile (located in the .vagrant.d directory of your home directory):
 
@@ -62,7 +62,7 @@ vagrant up
 
 Start the container with Docker:
 
-```
+```bash
 ./devbox
 
 # OR
@@ -73,4 +73,67 @@ docker run --name="devbox" -h "devbox" \
   ncarlier/devbox
 ```
 
-Done.
+## Remaining work
+
+### Vagrant persitent disk
+
+If you want to use a persistent disk for your home directory there is some manual work to do:
+
+```bash
+# SSH into the VM
+vagrant ssh
+# Swith to root user
+sudo -s
+# Unmount the persistent disk
+umount /mnt/home/
+# Build the partition
+cfdisk /dev/sdb
+# Make the file system
+mkfs.btrfs /dev/sdb1
+# Remount the partition
+mount -a
+# Copy all current home data to the new location
+cp -rp /home/* /mnt/home/
+# Edit the fstab
+vi /etc/fstab
+# Update the last line as follow:
+# /dev/sdb1 /home btrfs defaults 0 0
+
+# Reboot
+```
+
+### Dotfiles
+
+If you are using my dotfiles you have to start the install script:
+
+```bash
+# If you are behind a corporate proxy
+. /etc/profile.d/proxy.sh
+cd .dotfiles
+./install
+```
+
+### Proxy
+
+If your are behind a corporate proxy and you are using ZSH you may have to do this:
+
+```bash
+echo "source /etc/profile.d/proxy.sh" > .localrc
+```
+
+If you want to use docker without having struggle with the proxy, you just have to do this:
+
+```bash
+redsocks start
+```
+
+### SSL
+
+If you have troubles with ssl handshake you may have to do this:
+
+```bash
+sudo update-ca-certificates -f
+```
+
+
+Enjoy.
