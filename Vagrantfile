@@ -4,6 +4,7 @@
 $memory = 5120
 $cpus = 2
 $ip = "192.168.91.99"
+$headless = true
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -59,9 +60,15 @@ Vagrant.configure(2) do |config|
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider :virtualbox do |vb|
-    vb.gui = true
+    vb.gui = !$headless
     vb.memory = $memory
     vb.cpus = $cpus
+  end
+
+  config.vm.provider :libvirt do |domain|
+    domain.memory = $memory
+    domain.cpus = $cpus
+    #domain.storage :file, :size => '1G'
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
@@ -75,5 +82,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell" do |sh|
     sh.privileged = false
     sh.path = "provisioning/init.sh"
+    sh.args = $headless ? "headless" : "gui"
   end
 end

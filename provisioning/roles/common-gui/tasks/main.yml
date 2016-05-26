@@ -6,6 +6,7 @@
     - lightdm
     - chromium
     - openjdk-8-jdk
+    - vim-gtk
 
 - command: dpkg-reconfigure lightdm
 
