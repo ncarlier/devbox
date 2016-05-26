@@ -1,10 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-$memory = 2048
+$memory = 5120
 $cpus = 2
 $ip = "192.168.91.99"
-$disk = '.datadisk.vdi'
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -47,16 +46,22 @@ Vagrant.configure(2) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
+  # Persistent storage
+  config.persistent_storage.use_lvm = false
+  config.persistent_storage.enabled = true
+  config.persistent_storage.location = ".persistent.vdi"
+  config.persistent_storage.size = 50000
+  config.persistent_storage.mountname = 'home'
+  config.persistent_storage.filesystem = 'btrfs'
+  config.persistent_storage.mountpoint = '/mnt/home'
+  config.persistent_storage.volgroupname = 'homevg'
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider :virtualbox do |vb|
     vb.gui = true
     vb.memory = $memory
     vb.cpus = $cpus
-    unless File.exist?($disk)
-      vb.customize ['createhd', '--filename', $disk, '--size', 10 * 1024]
-    end
-    vb.customize ['storageattach', :id, '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', $disk]
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
