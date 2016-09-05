@@ -22,7 +22,7 @@
     - tmux
     - sudo
     - curl
-	- btrfs-tools
+    - btrfs-tools
     - openssl
     - unattended-upgrades
     - apt-listchanges
