@@ -3,6 +3,7 @@
   with_items:
     - xfce4
     - xfce4-terminal
+    - thunar-archive-plugin
     - lightdm
     - chromium
     - openjdk-8-jdk
